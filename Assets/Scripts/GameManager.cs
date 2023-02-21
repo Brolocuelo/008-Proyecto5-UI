@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,12 +20,26 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     private int score;
 
+    public GameObject gameOverPanel;
+
     private void Start()
     {
         isGameOver = false;
         StartCoroutine("SpawnRandomTarget");
         score = 0;
-        scoreText.text = $"Score: {score}";
+        scoreText.text = $"SCORE: {score}";
+        gameOverPanel.gameObject.SetActive(false);
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        gameOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private Vector3 RandomSpawnPosition()
@@ -57,6 +72,6 @@ public class GameManager : MonoBehaviour
     public void UpdateScore(int newPoints)
     {
         score += newPoints;
-        scoreText.text = $"Score: {score}";
+        scoreText.text = $"SCORE: {score}";
     }
 }
