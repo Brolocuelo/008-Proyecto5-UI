@@ -13,22 +13,25 @@ public class GameManager : MonoBehaviour
     private float distanceBetweenSauares = 2.5f;
 
     public bool isGameOver;
-    public float spawnRate = 2f;
     public List<Vector3> targetPositionsInScene;
-    public Vector3 randomPos;
+    private Vector3 randomPos;
 
     public TextMeshProUGUI scoreText;
-    private int score;
+    private float spawnRate = 2f;
+    private int score; // puntuación total;
 
     public GameObject gameOverPanel;
+    public GameObject startGamePanel;
+
+    public TextMeshProUGUI lifesText;
+    private int lives = 3;
+
+    public bool hasPowerShield;
 
     private void Start()
     {
-        isGameOver = false;
-        StartCoroutine("SpawnRandomTarget");
-        score = 0;
-        scoreText.text = $"SCORE: {score}";
-        gameOverPanel.gameObject.SetActive(false);
+        startGamePanel.SetActive(true);
+        gameOverPanel.SetActive(false);
     }
 
     public void GameOver()
@@ -72,6 +75,29 @@ public class GameManager : MonoBehaviour
     public void UpdateScore(int newPoints)
     {
         score += newPoints;
-        scoreText.text = $"SCORE: {score}";
+        scoreText.text = $"SCORE: \n{score}";
+    }
+
+    public void StartGame(int difficulty)
+    {
+        isGameOver = false;
+        score = 0;
+        lives = 3;
+        lifesText.text = $"Lives: \n{lives}";
+        UpdateScore(0);
+        spawnRate /= difficulty;
+        StartCoroutine(SpawnRandomTarget());
+        startGamePanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+    }
+
+    public void MinusLife() 
+    {
+        lives--;
+        lifesText.text = $"Lives: \n{lives}";
+        if (lives <= 0)
+        {
+            GameOver();
+        }
     }
 }
